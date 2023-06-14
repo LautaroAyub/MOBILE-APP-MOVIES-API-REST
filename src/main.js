@@ -13,6 +13,9 @@ function insertMovies(movies,container){
     container.innerHTML="";
     movies.forEach(movie => {
         const movieContainer= document.createElement("div");
+        movieContainer.addEventListener("click",()=>{
+            location.hash= "#movie="+movie.id
+        })
         movieContainer.classList.add("movie-container");
         const movieImg= document.createElement("img");
         movieImg.classList.add("movie-img");
@@ -55,12 +58,53 @@ async function getCategoriesPreview(){
 }
 
 async function getMoviesByCategory(id,name){
-    const {data}= await api("discover/movie",{
+    const { data }= await api("discover/movie",{
     params:{
         with_genres:id,
     }
     });
     const movies=data.results;
+    console.log(movies)
     headerCategoryTitle.innerHTML=name;
    insertMovies(movies,genericSection)
+}
+async function getMoviesBySearch(query){
+    const { data }= await api("search/movie",{
+        params:{
+            query,//query:query,
+        }
+        });
+        const movies=data.results;
+        console.log(movies)
+        headerCategoryTitle.innerHTML=name;
+       insertMovies(movies,genericSection)
+}
+
+async function getTrendingMovies (){
+    const {data}= await api("trending/movie/day");
+    const movies=data.results;
+    insertMovies(movies,genericSection);
+    headerTitle.innerHTML="Tendencias"
+}
+async function getMovieById(id){
+    //ver porque se manda data y porque se saca  const movies=data.results;
+    const { data:movie }= await api("movie/"+id);
+    const movieImgUrl="https://image.tmdb.org/t/p/w500"+movie.poster_path
+    headerSection.style.background=`
+    linear-gradient(
+        180deg, 
+        rgba(0, 0, 0, 0.35) 19.27%, 
+        rgba(0, 0, 0, 0) 29.17%
+        ),url(${movieImgUrl})`
+   
+        movieDetailTitle.textContent=movie.title;
+        movieDetailDescription.textContent=movie.overView;
+        movieDetailScore.textContent=movie.vote_average;
+        insertCategories(movie.genres,movieDetailCategoriesList);
+        getRelatedMoviesById(id);
+}
+async function getRelatedMoviesById(id){
+    const { data }= await api(`movie/${id}/recommendations`);
+    const relatedMovies=data.results;
+    insertMovies(relatedMovies,relatedMoviesContainer)
 }

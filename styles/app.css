@@ -38,6 +38,11 @@ body {
   margin: 4px 0 0 0;
   padding: 0;
 }
+img {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 
 h1, h2, h3 {
   margin: 0;
@@ -104,7 +109,24 @@ button {
 .movie-container {
   cursor: pointer;
 }
-
+.movie-container--loading{
+  background-color: var(--purple-light-2);
+  border-radius: 8px;
+  height: 225px;
+  min-height: 225px;
+  max-height: 225px;
+  width: 150px;
+  min-width: 150px;
+  max-width: 150px;
+  margin-bottom: 15px;
+  animation: loading-skeleton infinite 1.5s;
+}
+.movie-container--loading:nth-child(2){
+  animation-delay: .2s;
+}
+.movie-container--loading:nth-child(3){
+  animation-delay: .4s;
+}
 .movie-img {
   border-radius: 8px;
 }
@@ -138,6 +160,7 @@ button {
 } 
 
 .header-title {
+  margin-top: 50px;
   margin-bottom: 16px;
 }
 
@@ -147,6 +170,16 @@ button {
   margin-bottom: 16px;
   cursor: pointer;
   display: inline-block;
+  border-radius: 50px;
+  background-color: gray;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  position: fixed;
+  background-blend-mode: multiply;
+  opacity: 0.9;
+   z-index: 1;
+  
 }
 .header-arrow--white {
   color: var(--purple-light-1);
@@ -215,6 +248,24 @@ button {
 .category-container {
   width: 45%;
 }
+.category-container--loading{
+  background-color: var(--purple-light-2);
+  border-radius: 8px;
+  height: 25px;
+  min-height: 25px;
+  max-height: 25px;
+  width: 150px;
+  min-width: 150px;
+  max-width: 150px;
+  margin-bottom: 15px;
+  animation: loading-skeleton infinite 1.5s;
+}
+.category-container--loading:nth-child(2){
+  animation-delay: .2s;
+}
+.category-container--loading:nth-child(3){
+  animation-delay: .4s;
+}
 
 .category-title {
   margin-bottom: 8px;
@@ -225,7 +276,7 @@ button {
 }
 
 .category-title::before {
-  content: 'â€¢â€¢â€¢â€¢';
+  content: 'â€¢â€';
   color: transparent;
   /* TODO: cambiar color por ID de la categorÃ­a */
   background-color: var(--idColor);
@@ -356,4 +407,12 @@ footer {
 /* Navigation */
 .inactive {
   display: none;
+}/*animation*/
+@keyframes loading-skeleton{
+  0%,100%{
+    opacity: 100%;
+  }
+  50%{
+    opacity: 0%;
+  }
 }
