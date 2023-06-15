@@ -130,6 +130,14 @@ button {
 .movie-img {
   border-radius: 8px;
 }
+.movie-noLoad{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 237px;
+  width: 47.5%;
+}
 
 .categoriesPreview-list, .categories-list {
   display: flex;

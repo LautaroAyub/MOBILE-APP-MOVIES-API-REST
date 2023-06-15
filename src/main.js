@@ -12,7 +12,7 @@ console.log(api)
 const lazyLoader= new IntersectionObserver((entries)=>{
 
     entries.forEach((entry)=>{
-        console.log({entry})
+        // console.log({entry})
         if (entry.isIntersecting){
         const urlImg= entry.target.getAttribute("data-img");
         entry.target.setAttribute("src",urlImg);}
@@ -35,6 +35,16 @@ function insertMovies(movies,container, lazyLoad = false){
         movieImg.setAttribute(
         lazyLoad ? "data-img" : "src",
         "https://image.tmdb.org/t/p/w300"+movie.poster_path);
+
+        movieImg.addEventListener("error",()=>{
+           const movieH2Text=document.createTextNode(movie.title);
+           const movieH2= document.createElement("h2");
+           movieH2.appendChild(movieH2Text);
+           movieContainer.appendChild(movieH2);
+           movieImg.setAttribute("src","https://img.freepik.com/vector-premium/vector-icono-imagen-predeterminado-pagina-imagen-faltante-diseno-sitio-web-o-aplicacion-movil-no-hay-foto-disponible_87543-11093.jpg")
+           movieContainer.classList.remove("movie-container")
+           movieContainer.classList.add("movie-noLoad")
+        });
         if (lazyLoad){
             lazyLoader.observe(movieImg);
         }
