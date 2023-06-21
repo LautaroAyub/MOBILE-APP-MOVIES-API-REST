@@ -1,14 +1,23 @@
+let maxPage;
+let page=1;
+let infiniteScroll;
+window.addEventListener("scroll",infiniteScroll,false);
+
 searchFormBtn.addEventListener("click",()=>
 location.hash="#search="+ searchFormInput.value.trim()
 );
 trendingBtn.addEventListener("click",()=> location.hash="#trends");
-arrowBtn.addEventListener("click",()=>location.hash="#home")
+arrowBtn.addEventListener("click",()=>location.hash="#home");
 //ag hist)
 
 window.addEventListener("DOMContentLoaded",navigator,false);
 window.addEventListener("hashchange",navigator,false);
 function navigator(){
     console.log({location});
+    if(infiniteScroll){
+        window.removeEventListener("scroll",infiniteScroll,{ passive:false})
+        infiniteScroll=undefined;
+    }
     if(location.hash.startsWith("#trends")){
         trendsPage();searchFormInput
     }else if(location.hash.startsWith("#search=")){
@@ -21,7 +30,6 @@ function navigator(){
     }else{
         homePage();
     }
-    // window.scrollTo(0, 0);
  function smoothscroll(){
     const currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
      if (currentScroll > 0) {
@@ -30,6 +38,10 @@ function navigator(){
       }
     }
     smoothscroll();
+    if(infiniteScroll){
+        window.addEventListener("scroll",infiniteScroll,{ passive:false})
+    }
+    page=1;
 }
 
 function homePage(){
@@ -66,6 +78,7 @@ function categoriesPage(){
     const [categoryId,categoryName]= categoryData.split("-")
     const [nosirve,categoryIdOk]=categoryId.split('%20')
     getMoviesByCategory(categoryIdOk,categoryName);
+    infiniteScroll=getPaginatedByCategory(categoryId);
 
 
 }
@@ -103,6 +116,7 @@ function searchPage(){
 
     const [_,query]=location.hash.split("=");
     getMoviesBySearch(query);
+    infiniteScroll=getPaginatedMoviesBySearch(query);
 
 }
 function trendsPage(){
@@ -120,4 +134,5 @@ function trendsPage(){
     genericSection.classList.remove("inactive");
     movieDetailSection.classList.add("inactive");
     getTrendingMovies();
+    infiniteScroll=getPaginatedTrendingMovies;
 }

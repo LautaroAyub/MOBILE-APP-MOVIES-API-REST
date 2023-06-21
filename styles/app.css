@@ -330,11 +330,13 @@ button {
 
 .genericList-container .movie-img {
   width: 100%;
+  min-height: 175px;
 }
 
 
 /* Movie Detail */
 .movieDetail-container {
+  width: 100%;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   padding: 32px 24px;

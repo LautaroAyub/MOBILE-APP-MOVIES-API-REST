@@ -21,8 +21,16 @@ const lazyLoader= new IntersectionObserver((entries)=>{
     })
 });
 
-function insertMovies(movies,container, lazyLoad = false){
-    container.innerHTML="";
+function insertMovies(
+    movies,
+    container,
+    {
+        lazyLoad = false,
+        clean=true} ={},
+    ) {
+    if(clean){
+        container.innerHTML="";
+    }
     movies.forEach(movie => {
         const movieContainer= document.createElement("div");
         movieContainer.addEventListener("click",()=>{
@@ -76,7 +84,7 @@ function insertCategories(genres,container){
 async function getTrendingMoviesPreview (){
     const {data}= await api("trending/movie/day");
     const movies=data.results;
-    insertMovies(movies,trendingMoviesPreviewList,true);
+    insertMovies(movies,trendingMoviesPreviewList,{lazyLoad:true,clean:true});
 }
 
 async function getCategoriesPreview(){
@@ -92,9 +100,33 @@ async function getMoviesByCategory(id,name){
     }
     });
     const movies=data.results;
-    console.log(movies)
+    maxPage=data.total_pages;
+    console.log(maxPage)
     headerCategoryTitle.innerHTML=name;
-   insertMovies(movies,genericSection)
+   insertMovies(movies,genericSection,{lazyLoad:true,clean:true})
+}
+function getPaginatedByCategory(id){
+    //closure
+    return  async function (){
+        
+        const {scrollTop,scrollHeight,clientHeight}= document.documentElement;
+        const scrollIsBottom=(scrollTop+clientHeight)>=(scrollHeight -10);
+        const pageIsNotMax = page < maxPage;
+    
+        if(scrollIsBottom && pageIsNotMax){
+            page++;
+            console.log(page)
+            const { data }= await api("discover/movie",{
+                params:{
+                    with_genres:id,
+                    page,
+                }
+                });
+            const movies=data.results;
+            insertMovies(movies,genericSection,{lazyLoad:true,clean:false});
+        }
+    }
+
 }
 async function getMoviesBySearch(query){
     const { data }= await api("search/movie",{
@@ -103,19 +135,62 @@ async function getMoviesBySearch(query){
         }
         });
         const movies=data.results;
-        console.log(movies)
+        maxPage = data.total_pages;
+        console.log(maxPage)
         headerCategoryTitle.innerHTML=name;
-       insertMovies(movies,genericSection)
+       insertMovies(movies,genericSection,{lazyLoad:true,clean:true})
+}
+function getPaginatedMoviesBySearch(query){
+    //closure
+    return  async function (){
+        
+        const {scrollTop,scrollHeight,clientHeight}= document.documentElement;
+        const scrollIsBottom=(scrollTop+clientHeight)>=(scrollHeight -10);
+        const pageIsNotMax = page < maxPage;
+    
+        if(scrollIsBottom && pageIsNotMax){
+            page++;
+            console.log(page)
+            const { data }= await api("search/movie",{
+                params:{
+                    query,
+                    page,
+                }
+                });
+            const movies=data.results;
+            insertMovies(movies,genericSection,{lazyLoad:true,clean:false});
+        }
+    }
+
 }
 
 async function getTrendingMovies (){
     const {data}= await api("trending/movie/day");
     const movies=data.results;
-    insertMovies(movies,genericSection);
-    headerTitle.innerHTML="Tendencias"
+    maxPage=data.total_pages;
+    insertMovies( movies,genericSection, {lazyLoad:true,clean:true});
+    headerTitle.innerHTML="Tendencias";
+}
+
+async function getPaginatedTrendingMovies(){
+    const {scrollTop,scrollHeight,clientHeight}= document.documentElement;
+    const scrollIsBottom=(scrollTop+clientHeight)>=(scrollHeight);
+    const pageIsNotMax = page < maxPage;
+
+    if(scrollIsBottom && pageIsNotMax){
+        page++;
+        console.log(page)
+        const {data}= await api("trending/movie/day",{
+            params:{
+                page:page,
+            },
+        });
+        const movies=data.results;
+        insertMovies(movies,genericSection,{lazyLoad:true,clean:false});
+    }
+
 }
 async function getMovieById(id){
-    //ver porque se manda data y porque se saca  const movies=data.results;
     const { data:movie }= await api("movie/"+id);
     const movieImgUrl="https://image.tmdb.org/t/p/w500"+movie.poster_path
     headerSection.style.background=`
@@ -134,5 +209,6 @@ async function getMovieById(id){
 async function getRelatedMoviesById(id){
     const { data }= await api(`movie/${id}/recommendations`);
     const relatedMovies=data.results;
-    insertMovies(relatedMovies,relatedMoviesContainer)
+    console.log(relatedMovies)
+    insertMovies(relatedMovies,relatedMoviesContainer,{lazyLoad:false,clean:true})
 }
