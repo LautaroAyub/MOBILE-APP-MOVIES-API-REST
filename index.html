@@ -19,6 +19,13 @@
     <header id="header" class="header-container">
       <span class="header-arrow inactive">&lt;</span>
       <h1 class="header-title">Movies</h1>
+      <select name="language" id="la" class="language-container">
+        <option class="laOp" value="en">English</option>
+        <option value="es">Spanish</option>
+        <option value="pt-BR">Portuguese Br</option>
+        <option value="fr">French</option>
+    </select>
+      </select>
       <h1 class="header-title header-title--categoryView inactive"></h1>
       <form id="searchForm" class="header-searchForm">
         <input type="text" placeholder="Vengadores" />
@@ -42,6 +49,38 @@
         </div>
       </article>
     </section>
+
+
+    <section id="liked" class="liked-container">
+      <div class="liked-header">
+        <h2 class="liked-title">Peliculas Favoritas</h2>
+      </div>
+      <article class="liked-movieList">
+        <div class="movie-container">
+          <img
+              src="https://image.tmdb.org/t/p/w300/adOzdWS35KAo21r9R4BuFCkLer6.jpg"
+              class="movie-img"
+              alt="Nombre de la película"
+            />
+        </div> 
+        <div class="movie-container">
+          <img
+              src="https://image.tmdb.org/t/p/w300/adOzdWS35KAo21r9R4BuFCkLer6.jpg"
+              class="movie-img"
+              alt="Nombre de la película"
+            />
+        </div>  
+        <div class="movie-container">
+          <img
+              src="https://image.tmdb.org/t/p/w300/adOzdWS35KAo21r9R4BuFCkLer6.jpg"
+              class="movie-img"
+              alt="Nombre de la película"
+            />
+        </div>  
+      </article>
+    </section>
+
+
     <section id="categoriesPreview" class="categoriesPreview-container">
       <h2 class="categoriesPreview-title">Categorías</h2>
       <article class="categoriesPreview-list">
@@ -53,6 +92,7 @@
         </div> -->
       </article>
     </section>
+  
     <section id="genericList" class="genericList-container inactive">
       <div class="movie-container movie-container--loading"></div>
       <div class="movie-container movie-container--loading"></div>

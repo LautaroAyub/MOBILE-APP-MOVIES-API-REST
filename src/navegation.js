@@ -10,9 +10,9 @@ trendingBtn.addEventListener("click",()=> location.hash="#trends");
 arrowBtn.addEventListener("click",()=>location.hash="#home");
 //ag hist)
 
-window.addEventListener("DOMContentLoaded",navigator,false);
-window.addEventListener("hashchange",navigator,false);
-function navigator(){
+window.addEventListener("DOMContentLoaded",navigatorr,false);
+window.addEventListener("hashchange",navigatorr,false);
+function navigatorr(){
     console.log({location});
     if(infiniteScroll){
         window.removeEventListener("scroll",infiniteScroll,{ passive:false})
@@ -57,8 +57,10 @@ function homePage(){
     categoriesPreviewSection.classList.remove("inactive");
     genericSection.classList.add("inactive");
     movieDetailSection.classList.add("inactive");
+    likedMoviesSection.classList.remove("inactive");
     getTrendingMoviesPreview ();
     getCategoriesPreview();
+    insertFavoritedMovies();
 }
 function categoriesPage(){
     headerSection.classList.remove("header-container--long");
@@ -74,6 +76,7 @@ function categoriesPage(){
     categoriesPreviewSection.classList.add("inactive");
     genericSection.classList.remove("inactive");
     movieDetailSection.classList.add("inactive");
+    likedMoviesSection.classList.add("inactive");
     const [_,categoryData]=location.hash.split("=");
     const [categoryId,categoryName]= categoryData.split("-")
     const [nosirve,categoryIdOk]=categoryId.split('%20')
@@ -96,6 +99,7 @@ function movieDetailsPage(){
     categoriesPreviewSection.classList.add("inactive");
     genericSection.classList.add("inactive");
     movieDetailSection.classList.remove("inactive");
+    likedMoviesSection.classList.add("inactive");
     const [_,movieId]=location.hash.split("=");
     getMovieById(movieId);
 }
@@ -113,6 +117,7 @@ function searchPage(){
     categoriesPreviewSection.classList.add("inactive");
     genericSection.classList.remove("inactive");
     movieDetailSection.classList.add("inactive");
+    likedMoviesSection.classList.add("inactive");
 
     const [_,query]=location.hash.split("=");
     getMoviesBySearch(query);
@@ -133,6 +138,7 @@ function trendsPage(){
     categoriesPreviewSection.classList.add("inactive");
     genericSection.classList.remove("inactive");
     movieDetailSection.classList.add("inactive");
+    likedMoviesSection.classList.add("inactive");
     getTrendingMovies();
     infiniteScroll=getPaginatedTrendingMovies;
 }

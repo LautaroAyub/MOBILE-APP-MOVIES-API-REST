@@ -1,3 +1,8 @@
+let lang =navigator.language || "en-US";
+language.addEventListener("click",()=>{
+    lang=language.value
+    homePage();
+} )
 const api= axios.create({
     baseURL:"https://api.themoviedb.org/3/",
     headers:{
@@ -5,9 +10,33 @@ const api= axios.create({
     },
     params:{
         "api_key":API_KEY,
+        "language": lang,
     }
 });
+
+
 console.log(api)
+
+function likedMoviesList(){
+    const item= JSON.parse(localStorage.getItem("liked_movies"));
+    let movies
+    if(item){
+        movies=item
+    }else{
+        movies={}
+    }
+    return movies
+}
+function likeMovie(movie){
+    const liked_movies=likedMoviesList()
+    if(liked_movies[movie.id]){
+        liked_movies[movie.id]=undefined;
+    }else{
+        liked_movies[movie.id]=movie;
+    }
+    localStorage.setItem("liked_movies", JSON.stringify(liked_movies))
+
+}
 //Utils
 const lazyLoader= new IntersectionObserver((entries)=>{
 
@@ -20,7 +49,6 @@ const lazyLoader= new IntersectionObserver((entries)=>{
 
     })
 });
-
 function insertMovies(
     movies,
     container,
@@ -33,13 +61,13 @@ function insertMovies(
     }
     movies.forEach(movie => {
         const movieContainer= document.createElement("div");
-        movieContainer.addEventListener("click",()=>{
-            location.hash= "#movie="+movie.id
-        })
         movieContainer.classList.add("movie-container");
         const movieImg= document.createElement("img");
         movieImg.classList.add("movie-img");
         movieImg.setAttribute("alt",movie.title);
+        movieImg.addEventListener("click",()=>{
+            location.hash= "#movie="+movie.id
+        })
         movieImg.setAttribute(
         lazyLoad ? "data-img" : "src",
         "https://image.tmdb.org/t/p/w300"+movie.poster_path);
@@ -53,6 +81,23 @@ function insertMovies(
            movieContainer.classList.remove("movie-container")
            movieContainer.classList.add("movie-noLoad")
         });
+
+
+        const movieBtn=document.createElement("button");
+        const existMovieInLikes= localStorage.liked_movies.includes(movie.id);
+        console.log(existMovieInLikes)
+        if (existMovieInLikes){
+            movieBtn.classList.add("movie-btn","movie-btn--liked");
+
+        }else{
+            movieBtn.classList.add("movie-btn")
+        }
+        movieBtn.addEventListener("click", ()=>{
+            movieBtn.classList.toggle("movie-btn--liked")
+           likeMovie(movie);
+           insertFavoritedMovies();
+        })
+        movieContainer.appendChild(movieBtn)
         if (lazyLoad){
             lazyLoader.observe(movieImg);
         }
@@ -61,6 +106,7 @@ function insertMovies(
         container.appendChild(movieContainer);
 
     });
+    console.log(movies)
 }
 function insertCategories(genres,container){
     container.innerHTML="";
@@ -79,6 +125,13 @@ function insertCategories(genres,container){
         container.appendChild(categoryContainer);   
     });
 }
+
+function insertFavoritedMovies(){
+    const favoritesMoviesArray=Object.values(JSON.parse(localStorage.liked_movies));
+    console.log(favoritesMoviesArray);
+    insertMovies(favoritesMoviesArray,likedMoviesListContain,{lazyLoad:true,clean:true});
+}
+
 
 //LLamados a la api
 async function getTrendingMoviesPreview (){
