@@ -29,4 +29,4 @@ El uso de Local Storage para guardar peliculas en "Me gusta".
 
 Por el momento no anda gitpages. Para ver la funcionalidad crear api-key como en secrets.example.js.
 
-GH PAGE: https://lautiayub.github.io/MOBILE-APP-MOVIES-API-REST/
+PAGE: superb-lokum-fdf80e.netlify.app
